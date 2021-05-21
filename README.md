@@ -2,6 +2,8 @@
   <img width="100%" height="100%" src="docs/images/Vitis-AI.png">
 </div>
 
+https://china.xilinx.com/support/documentation/sw_manuals/vitis_ai/1_3/c_ug1414-vitis-ai.pdf
+
 <br />
 Xilinx&reg; Vitis&trade; AI is a development stack for AI inference on Xilinx hardware platforms, including both edge devices and Alveo cards.
 
