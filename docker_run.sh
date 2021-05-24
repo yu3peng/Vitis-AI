@@ -92,7 +92,6 @@ docker_run_params=$(cat <<-END
     -v $DOCKER_RUN_DIR:/vitis_ai_home \
     -v $HERE:/workspace \
     -w /workspace \
-    --user root \
     --rm \
     --network=host \
     ${DETACHED} \
