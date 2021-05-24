@@ -59,7 +59,7 @@ Two options are available for installing the containers with the Vitis AI tools 
 
  - Clone the Vitis-AI repository to obtain the examples, reference code, and scripts.
     ```bash
-    git clone --recurse-submodules https://github.com/Xilinx/Vitis-AI  
+    git clone --recurse-submodules https://github.com/yu3peng/Vitis-AI  
 
     cd Vitis-AI
     ```
