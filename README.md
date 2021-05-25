@@ -53,10 +53,6 @@ Two options are available for installing the containers with the Vitis AI tools 
 
  - [Ubuntu playground](https://www.katacoda.com/courses/ubuntu/playground) - Use free resource
 
- - [Install Docker](docs/install_docker/README.md) - if Docker not installed on your machine yet
-
- - [Ensure your linux user is in the group docker](https://docs.docker.com/install/linux/linux-postinstall/)
-
  - Clone the Vitis-AI repository to obtain the examples, reference code, and scripts.
     ```bash
     git clone --recurse-submodules https://github.com/yu3peng/Vitis-AI  
@@ -67,11 +63,6 @@ Two options are available for installing the containers with the Vitis AI tools 
     ```
 
 #### Using Pre-built Docker
-
-Download the latest Vitis AI Docker with the following command. This container runs on CPU.  
-```
-docker pull xilinx/vitis-ai-cpu:latest  
-```
 
 To run the docker, use command:
 ```
@@ -433,11 +424,1665 @@ For PyTorch Workflows do:
 For TensorFlow 2.3 Workflows do:
      conda activate vitis-ai-tensorflow2 
 Vitis-AI /workspace > 
-Vitis-AI /workspace > 
-Vitis-AI /workspace > conda activate vitis-ai-tensorflow2
-(vitis-ai-tensorflow2) Vitis-AI /workspace > 
-(vitis-ai-tensorflow2) Vitis-AI /workspace > 
-(vitis-ai-tensorflow2) Vitis-AI /workspace > 
+Vitis-AI /workspace > conda activate vitis-ai-caffe
+(vitis-ai-caffe) Vitis-AI /workspace > source /vitis_ai_home/setup/alveo/u200_u250/overlaybins/setup.sh
+------------------
+Using VAI_HOME
+------------------
+/vitis_ai_home
+
+---------------------
+Verifying XILINX_XRM
+---------------------
+---------------------
+Using LD_LIBRARY_PATH
+---------------------
+/opt/xilinx/xrt/lib:/usr/lib:/usr/lib/x86_64-linux-gnu:/usr/local/lib:/opt/vitis_ai/conda/envs/vitis-ai-tensorflow/lib
+--------------------
+Vitis-AI Flow
+---------------------
+-------------------
+Using LIBXDNN_PATH
+-------------------
+/opt/vitis_ai/conda/envs/vitis-ai-caffe/lib/libxfdnn.so
+
+-------------------
+PYTHONPATH
+-------------------
+
+
+---------------------
+Verifying XILINX_XRT
+---------------------
+XILINX_XRT        : /opt/xilinx/xrt
+PATH              : /opt/xilinx/xrt/bin:/opt/vitis_ai/conda/envs/vitis-ai-caffe/bin:/opt/vitis_ai/conda/bin:/opt/vitis_ai/conda/condabin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+LD_LIBRARY_PATH   : /opt/xilinx/xrt/lib:/opt/vitis_ai/conda/envs/vitis-ai-caffe/lib:/opt/xilinx/xrt/lib:/usr/lib:/usr/lib/x86_64-linux-gnu:/usr/local/lib:/opt/vitis_ai/conda/envs/vitis-ai-tensorflow/lib
+PYTHONPATH        : /opt/xilinx/xrt/python:
+(vitis-ai-caffe) Vitis-AI /workspace > cd $VAI_HOME/examples/DPUCADX8G/face_detect/FDDB
+(vitis-ai-caffe) Vitis-AI /vitis_ai_home/examples/DPUCADX8G/face_detect/FDDB > wget http://vis-www.cs.umass.edu/fddb/originalPics.tar.gz
+--2021-05-24 21:37:51--  http://vis-www.cs.umass.edu/fddb/originalPics.tar.gz
+Resolving vis-www.cs.umass.edu (vis-www.cs.umass.edu)... 128.119.244.95
+Connecting to vis-www.cs.umass.edu (vis-www.cs.umass.edu)|128.119.244.95|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 579061091 (552M) [application/x-gzip]
+Saving to: ‘originalPics.tar.gz’
+
+originalPics.tar.gz      100%[===============================>] 552.24M  27.8MB/s    in 20s     
+
+2021-05-24 21:38:11 (27.1 MB/s) - ‘originalPics.tar.gz’ saved [579061091/579061091]
+
+(vitis-ai-caffe) Vitis-AI /vitis_ai_home/examples/DPUCADX8G/face_detect/FDDB > tar -xvf originalPics.tar.gz
+(vitis-ai-caffe) Vitis-AI /vitis_ai_home/examples/DPUCADX8G/face_detect/FDDB > cd $VAI_HOME/examples/DPUCADX8G/face_detect/
+(vitis-ai-caffe) Vitis-AI /vitis_ai_home/examples/DPUCADX8G/face_detect/FDDB > ./test_visual.sh face_detection_360_640
+
+/python/ face_detection_360_640/face_detection_360_640.prototxt ./work/face_detection_360_640_dec
+ent.prototxt FDDB/FDDB_list_dummy.txt FDDB/
+360 640
+<class 'caffe.net_spec.NetSpec'>
+layer {
+  name: "data"
+  type: "ImageData"
+  top: "data"
+  top: "label"
+  include {
+    phase: TRAIN
+  }
+  transform_param {
+    mirror: false
+    mean_value: 128.0
+  }
+  image_data_param {
+    source: "FDDB/FDDB_list_dummy.txt"
+    batch_size: 50
+    shuffle: false
+    new_height: 360
+    new_width: 640
+    root_folder: "FDDB/"
+  }
+}
+
+before
+ layer {
+  name: "data"
+  type: "Input"
+  top: "data"
+  input_param {
+    shape {
+      dim: 1
+      dim: 3
+      dim: 360
+      dim: 640
+    }
+  }
+}
+layer {
+  name: "L0"
+  type: "Convolution"
+  bottom: "data"
+  top: "L0"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+  param {
+    lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  convolution_param {
+    num_output: 8
+    pad: 2
+    kernel_size: 5
+    stride: 2
+      weight_filler {
+      type: "gaussian"
+      std: 0.009999999776482582
+    }
+    bias_filler {
+      type: "constant"
+      value: 1.0
+    }
+  }
+}
+layer {
+  name: "L0_bn"
+  type: "BatchNorm"
+  bottom: "L0"
+  top: "L0_bn"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+  param {
+    lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  param {
+    lr_mult: 0.0
+    decay_mult: 0.0
+  }
+  param {
+    lr_mult: 0.0
+   decay_mult: 0.0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.8999999761581421
+    scale_filler {
+      type: "constant"
+      value: 1.0
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "relu1"
+  type: "ReLU"
+  bottom: "L0_bn"
+  top: "L0_bn"
+}
+layer {
+  name: "L0_1"
+  type: "Convolution"
+  bottom: "L0_bn"
+  top: "L0_1"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+  param {
+    lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  convolution_param {
+    num_output: 32
+    pad: 2
+    kernel_size: 5
+    stride: 2
+    weight_filler {
+      type: "gaussian"
+      std: 0.009999999776482582
+    }
+    bias_filler {
+      type: "constant"
+      value: 1.0
+    }
+  }
+}
+layer {
+  name: "L0_1_bn"
+  type: "BatchNorm"
+  bottom: "L0_1"
+  top: "L0_1_bn"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+  param {
+   lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  param {
+    lr_mult: 0.0
+    decay_mult: 0.0
+  }
+  param {
+    lr_mult: 0.0
+    decay_mult: 0.0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.8999999761581421
+    scale_filler {
+      type: "constant"
+      value: 1.0
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "relu1_1"
+  type: "ReLU"
+  bottom: "L0_1_bn"
+  top: "L0_1_bn"
+}
+layer {
+  name: "cp1"
+  type: "Convolution"
+  bottom: "L0_1_bn"
+  top: "cp1"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+  param {
+    lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  convolution_param {
+    num_output: 32
+    pad: 1
+    kernel_size: 3
+    stride: 2
+    weight_filler {
+      type: "gaussian"
+      std: 0.009999999776482582
+    }
+    bias_filler {
+      type: "constant"
+      value: 1.0
+    }
+  }
+}
+layer {
+ name: "cp1_bn"
+  type: "BatchNorm"
+  bottom: "cp1"
+  top: "cp1_bn"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+  param {
+    lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  param {
+    lr_mult: 0.0
+    decay_mult: 0.0
+  }
+  param {
+    lr_mult: 0.0
+    decay_mult: 0.0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.8999999761581421
+    scale_filler {
+      type: "constant"
+      value: 1.0
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+     }
+  }
+}
+layer {
+  name: "relu_cp1"
+  type: "ReLU"
+  bottom: "cp1_bn"
+  top: "cp1_bn"
+}
+layer {
+  name: "L1"
+  type: "Convolution"
+  bottom: "cp1_bn"
+  top: "L1"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+  param {
+    lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  convolution_param {
+    num_output: 64
+    pad: 2
+    kernel_size: 5
+    weight_filler {
+      type: "gaussian"
+      std: 0.009999999776482582
+   }
+    bias_filler {
+      type: "constant"
+      value: 1.0
+    }
+  }
+}
+layer {
+  name: "L1_bn"
+  type: "BatchNorm"
+  bottom: "L1"
+  top: "L1_bn"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+  param {
+    lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  param {
+    lr_mult: 0.0
+    decay_mult: 0.0
+  }
+  param {
+    lr_mult: 0.0
+    decay_mult: 0.0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.8999999761581421
+    scale_filler {
+      type: "constant"
+      value: 1.0
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "relu2"
+  type: "ReLU"
+  bottom: "L1_bn"
+  top: "L1_bn"
+}
+layer {
+  name: "cp2"
+  type: "Convolution"
+  bottom: "L1_bn"
+  top: "cp2"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+  param {
+    lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  convolution_param {
+    num_output: 64
+    pad: 1
+    kernel_size: 3
+    stride: 2
+    weight_filler {
+      type: "gaussian"
+      std: 0.009999999776482582
+    }
+    bias_filler {
+      type: "constant"
+      value: 1.0
+    }
+  }
+}
+layer {
+  name: "cp2_bn"
+  type: "BatchNorm"
+  bottom: "cp2"
+  top: "cp2_bn"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+  param {
+    lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  param {
+    lr_mult: 0.0
+    decay_mult: 0.0
+  }
+  param {
+    lr_mult: 0.0
+    decay_mult: 0.0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.8999999761581421
+    scale_filler {
+      type: "constant"
+      value: 1.0
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "relu_cp2"
+  type: "ReLU"
+  bottom: "cp2_bn"
+  top: "cp2_bn"
+}
+layer {
+  name: "L2"
+  type: "Convolution"
+ bottom: "cp2_bn"
+  top: "L2"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+  param {
+    lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  convolution_param {
+    num_output: 64
+    pad: 1
+    kernel_size: 3
+    weight_filler {
+      type: "gaussian"
+      std: 0.009999999776482582
+    }
+    bias_filler {
+      type: "constant"
+      value: 1.0
+    }
+  }
+}
+layer {
+  name: "L2_bn"
+  type: "BatchNorm"
+  bottom: "L2"
+  top: "L2_bn"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+  param {
+    lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  param {
+    lr_mult: 0.0
+    decay_mult: 0.0
+  }
+  param {
+    lr_mult: 0.0
+    decay_mult: 0.0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.8999999761581421
+    scale_filler {
+      type: "constant"
+      value: 1.0
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "relu3"
+  type: "ReLU"
+  bottom: "L2_bn"
+  top: "L2_bn"
+}
+layer {
+  name: "L3"
+  type: "Convolution"
+  bottom: "L2_bn"
+  top: "L3"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+  param {
+    lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  convolution_param {
+    num_output: 64
+    pad: 1
+    kernel_size: 3
+    weight_filler {
+      type: "gaussian"
+      std: 0.009999999776482582
+    }
+    bias_filler {
+      type: "constant"
+      value: 1.0
+      }
+  }
+}
+layer {
+  name: "L3_bn"
+  type: "BatchNorm"
+  bottom: "L3"
+  top: "L3_bn"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+  param {
+    lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  param {
+    lr_mult: 0.0
+    decay_mult: 0.0
+  }
+  param {
+    lr_mult: 0.0
+    decay_mult: 0.0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.8999999761581421
+    scale_filler {
+      type: "constant"
+      value: 1.0
+      }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "relu4"
+  type: "ReLU"
+  bottom: "L3_bn"
+  top: "L3_bn"
+}
+layer {
+  name: "L4"
+  type: "Convolution"
+  bottom: "L3_bn"
+  top: "L4"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+  param {
+    lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  convolution_param {
+    num_output: 64
+    pad: 1
+   kernel_size: 3
+    weight_filler {
+      type: "gaussian"
+      std: 0.009999999776482582
+    }
+    bias_filler {
+      type: "constant"
+      value: 1.0
+    }
+  }
+}
+layer {
+  name: "L4_bn"
+  type: "BatchNorm"
+  bottom: "L4"
+  top: "L4_bn"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+  param {
+    lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  param {
+    lr_mult: 0.0
+    decay_mult: 0.0
+  }
+  param {
+    lr_mult: 0.0
+    decay_mult: 0.0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.8999999761581421
+    scale_filler {
+      type: "constant"
+      value: 1.0
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "relu5"
+  type: "ReLU"
+  bottom: "L4_bn"
+  top: "L4_bn"
+}
+layer {
+  name: "cp5"
+  type: "Convolution"
+  bottom: "L4_bn"
+  top: "cp5"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+  param {
+    lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  convolution_param {
+    num_output: 64
+    pad: 1
+    kernel_size: 3
+    stride: 2
+    weight_filler {
+      type: "gaussian"
+      std: 0.009999999776482582
+    }
+    bias_filler {
+      type: "constant"
+      value: 1.0
+    }
+  }
+}
+layer {
+  name: "cp5_bn"
+  type: "BatchNorm"
+  bottom: "cp5"
+  top: "cp5_bn"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+ param {
+    lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  param {
+    lr_mult: 0.0
+    decay_mult: 0.0
+  }
+  param {
+    lr_mult: 0.0
+    decay_mult: 0.0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.8999999761581421
+    scale_filler {
+      type: "constant"
+      value: 1.0
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "relu_cp5"
+  type: "ReLU"
+  bottom: "cp5_bn"
+  top: "cp5_bn"
+}
+layer {
+  name: "L5"
+  type: "Convolution"
+  bottom: "cp5_bn"
+  top: "L5"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+  param {
+    lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  convolution_param {
+    num_output: 128
+    pad: 2
+    kernel_size: 5
+    weight_filler {
+      type: "gaussian"
+      std: 0.009999999776482582
+    }
+    bias_filler {
+      type: "constant"
+      value: 1.0
+    }
+  }
+}
+layer {
+ type: "BatchNorm"
+  bottom: "L5"
+  top: "L5_bn"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+  param {
+    lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  param {
+    lr_mult: 0.0
+    decay_mult: 0.0
+  }
+  param {
+    lr_mult: 0.0
+    decay_mult: 0.0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.8999999761581421
+    scale_filler {
+      type: "constant"
+      value: 1.0
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "relu6"
+  type: "ReLU"
+  bottom: "L5_bn"
+  top: "L5_bn"
+}
+layer {
+  name: "L6"
+  type: "Convolution"
+  bottom: "L5_bn"
+  top: "L6"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+  param {
+    lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  convolution_param {
+    num_output: 128
+    kernel_size: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.009999999776482582
+    }
+    bias_filler {
+     type: "constant"
+      value: 1.0
+    }
+  }
+}
+layer {
+  name: "L6_bn"
+  type: "BatchNorm"
+  bottom: "L6"
+  top: "L6_bn"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+  param {
+    lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  param {
+    lr_mult: 0.0
+    decay_mult: 0.0
+  }
+  param {
+    lr_mult: 0.0
+    decay_mult: 0.0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.8999999761581421
+    scale_filler {
+      type: "constant"
+      value: 1.0
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "relu7"
+  type: "ReLU"
+  bottom: "L6_bn"
+  top: "L6_bn"
+}
+layer {
+  name: "bb-output"
+  type: "Convolution"
+  bottom: "L6_bn"
+  top: "bb-output"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+  param {
+    lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  convolution_param {
+    num_output: 256
+    kernel_size: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.009999999776482582
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "pixel-conv"
+  type: "Convolution"
+  bottom: "L6_bn"
+  top: "pixel-conv"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+  param {
+    lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  convolution_param {
+    num_output: 128
+    kernel_size: 1
+    weight_filler {  
+     num_output: 256
+    kernel_size: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.009999999776482582
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "pixel-conv"
+  type: "Convolution"
+  bottom: "L6_bn"
+  top: "pixel-conv"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+  param {
+    lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  convolution_param {
+    num_output: 128
+    kernel_size: 1
+    weight_filler {
+    
+    
+    
+    
+layer {
+  name: "cp5_bn"
+  type: "BatchNorm"
+  bottom: "cp5"
+  top: "cp5_bn"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+  param {
+    lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  param {
+    lr_mult: 0.0
+    decay_mult: 0.0
+  }
+  param {
+    lr_mult: 0.0
+    decay_mult: 0.0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.8999999761581421
+    scale_filler {
+      type: "constant"
+      value: 1.0
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "relu_cp5"
+  type: "ReLU"
+  bottom: "cp5_bn"
+  top: "cp5_bn"
+}
+layer {
+  name: "L5"
+  type: "Convolution"
+  bottom: "cp5_bn"
+  top: "L5"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+  param {
+    lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  convolution_param {
+    num_output: 128
+    pad: 2
+    kernel_size: 5
+    weight_filler {
+      type: "gaussian"
+      std: 0.009999999776482582
+    }
+    bias_filler {
+      type: "constant"
+      value: 1.0
+    }
+  }
+}
+layer {
+  name: "L5_bn"
+  type: "BatchNorm"
+  bottom: "L5"
+  top: "L5_bn"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+  param {
+    lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  param {
+    lr_mult: 0.0
+    decay_mult: 0.0
+  }
+  param {
+    lr_mult: 0.0
+    decay_mult: 0.0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.8999999761581421
+    scale_filler {
+      type: "constant"
+      value: 1.0
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "relu6"
+  type: "ReLU"
+  bottom: "L5_bn"
+  top: "L5_bn"
+}
+layer {
+  name: "L6"
+  type: "Convolution"
+  bottom: "L5_bn"
+  top: "L6"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+  param {
+    lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  convolution_param {
+    num_output: 128
+    kernel_size: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.009999999776482582
+    }
+    bias_filler {
+      type: "constant"
+      value: 1.0
+    }
+  }
+}
+layer {
+  name: "L6_bn"
+  type: "BatchNorm"
+  bottom: "L6"
+  top: "L6_bn"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+  param {
+    lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  param {
+    lr_mult: 0.0
+    decay_mult: 0.0
+  }
+  param {
+    lr_mult: 0.0
+    decay_mult: 0.0
+  }
+  batch_norm_param {
+    moving_average_fraction: 0.8999999761581421
+    scale_filler {
+      type: "constant"
+      value: 1.0
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "relu7"
+  type: "ReLU"
+  bottom: "L6_bn"
+  top: "L6_bn"
+}
+layer {
+  name: "bb-output"
+  type: "Convolution"
+  bottom: "L6_bn"
+  top: "bb-output"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+  param {
+    lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  convolution_param {
+    num_output: 256
+    kernel_size: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.009999999776482582
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "pixel-conv"
+  type: "Convolution"
+  bottom: "L6_bn"
+  top: "pixel-conv"
+  param {
+    lr_mult: 1.0
+    decay_mult: 1.0
+  }
+  param {
+    lr_mult: 2.0
+    decay_mult: 0.0
+  }
+  convolution_param {
+    num_output: 128
+    kernel_size: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.009999999776482582
+    }
+    bias_filler {
+      type: "constant"
+      value: 0.0
+    }
+  }
+}
+layer {
+  name: "pixel-tile"
+  type: "GSTiling"
+  bottom: "pixel-conv"
+  top: "pixel-conv-tiled"
+  gs_tiling_param {
+    stride: 8
+    reverse: true
+  }
+}
+layer {
+  name: "bb-tile"
+  type: "GSTiling"
+  bottom: "bb-output"
+  top: "bb-output-tiled"
+  gs_tiling_param {
+    stride: 8
+    reverse: true
+  }
+}
+layer {
+  name: "pixel-loss"
+  type: "Softmax"
+  bottom: "pixel-conv-tiled"
+  top: "pixel-loss"
+}
+
+--------------------------------------------------
+Output Quantized Train&Test Model:   "./work/quantize_train_test.prototxt"
+Output Quantized Train&Test Weights: "./work/quantize_train_test.caffemodel"
+Output Deploy Weights: "./work/deploy.caffemodel"
+Output Deploy Model:   "./work/deploy.prototxt"
+Output Quantize Info for debugging: "./work/quantize_info.txt"
+--- Using Local XCLBIN ---
+**************************************************
+* VITIS_AI Compilation - Xilinx Inc.
+**************************************************
+GenerateCode: ./work/face_detect
+Weights: ./work/deploy.caffemodel
+PngFile: None
+ConcatStrategy: None
+Strategy: all
+ScheduleFile: None
+DDR: 1024
+DSP: 96
+Verbose: False
+FromTF: True
+Memory: 9
+Byte per Pixel: 1
+Phase: TEST
+RankDir: BT
+Start compiling ./work/deploy.prototxt
+
+**************************************************
+* BUILDING DATA FLOW GRAPH
+**************************************************
+Writing processed protoxt to /tmp/tmp2w6nqof1:deploy.prototxt
+ ... Loading Network Net /tmp/tmp2w6nqof1:deploy.prototxt ./work/deploy.caffemodel 1 <class 'str'> <class 'str'> <class 'int'>
+  ... loading static Net
+ Combining Nodes 
+  _____ 
+
+**************************************************
+* BUILDING NETWORK SCHEDULE
+**************************************************
+**************************************************
+* General Graph Manipulations
+**************************************************
+**************************************************
+* Fully connected layers as Convolutions
+**************************************************
+{'version': 3, 'name': 'rule3', 'images': {'width': range(1, 4095), 'height': range(1, 4095), 'channels': range(3, 4097)}, 'kernels': {'frames': [[1, 1], [1, 2], [1, 3], [1, 4], [1, 5], [1, 6], [1, 7], [1, 8], [1, 9], [1, 10], [1, 11], [1, 12], [1, 13], [1, 14], [1, 15], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [2, 7], [2, 8], [2, 9], [2, 10], [2, 11], [2, 12], [2, 13], [2, 14], [2, 15], [3, 1], [3, 2], [3, 3], [3, 4], [3, 5], [3, 6], [3, 7], [3, 8], [3, 9], [3, 10], [3, 11], [3, 12], [3, 13], [3, 14], [3, 15], [4, 1], [4, 2], [4, 3], [4, 4], [4, 5], [4, 6], [4, 7], [4, 8], [4, 9], [4, 10], [4, 11], [4, 12], [4, 13], [4, 14], [4, 15], [5, 1], [5, 2], [5, 3], [5, 4], [5, 5], [5, 6], [5, 7], [5, 8], [5, 9], [5, 10], [5, 11], [5, 12], [5, 13], [5, 14], [5, 15], [6, 1], [6, 2], [6, 3], [6, 4], [6, 5], [6, 6], [6, 7], [6, 8], [6, 9], [6, 10], [6, 11], [6, 12], [6, 13], [6, 14], [6, 15], [7, 1], [7, 2], [7, 3], [7, 4], [7, 5], [7, 6], [7, 7], [7, 8], [7, 9], [7, 10], [7, 11], [7, 12], [7, 13], [7, 14], [7, 15], [8, 1], [8, 2], [8, 3], [8, 4], [8, 5], [8, 6], [8, 7], [8, 8], [8, 9], [8, 10], [8, 11], [8, 12], [8, 13], [8, 14], [8, 15], [9, 1], [9, 2], [9, 3], [9, 4], [9, 5], [9, 6], [9, 7], [9, 8], [9, 9], [9, 10], [9, 11], [9, 12], [9, 13], [9, 14], [9, 15], [10, 1], [10, 2], [10, 3], [10, 4], [10, 5], [10, 6], [10, 7], [10, 8], [10, 9], [10, 10], [10, 11], [10, 12], [10, 13], [10, 14], [10, 15], [11, 1], [11, 2], [11, 3], [11, 4], [11, 5], [11, 6], [11, 7], [11, 8], [11, 9], [11, 10], [11, 11], [11, 12], [11, 13], [11, 14], [11, 15], [12, 1], [12, 2], [12, 3], [12, 4], [12, 5], [12, 6], [12, 7], [12, 8], [12, 9], [12, 10], [12, 11], [12, 12], [12, 13], [12, 14], [12, 15], [13, 1], [13, 2], [13, 3], [13, 4], [13, 5], [13, 6], [13, 7], [13, 8], [13, 9], [13, 10], [13, 11], [13, 12], [13, 13], [13, 14], [13, 15], [14, 1], [14, 2], [14, 3], [14, 4], [14, 5], [14, 6], [14, 7], [14, 8], [14, 9], [14, 10], [14, 11], [14, 12], [14, 13], [14, 14], [14, 15], [15, 1], [15, 2], [15, 3], [15, 4], [15, 5], [15, 6], [15, 7], [15, 8], [15, 9], [15, 10], [15, 11], [15, 12], [15, 13], [15, 14], [15, 15]], 'strides': [[1, 1], [1, 2], [1, 3], [1, 4], [1, 5], [1, 6], [1, 7], [1, 8], [1, 9], [1, 10], [1, 11], [1, 12], [1, 13], [1, 14], [1, 15], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [2, 7], [2, 8], [2, 9], [2, 10], [2, 11], [2, 12], [2, 13], [2, 14], [2, 15], [3, 1], [3, 2], [3, 3], [3, 4], [3, 5], [3, 6], [3, 7], [3, 8], [3, 9], [3, 10], [3, 11], [3, 12], [3, 13], [3, 14], [3, 15], [4, 1], [4, 2], [4, 3], [4, 4], [4, 5], [4, 6], [4, 7], [4, 8], [4, 9], [4, 10], [4, 11], [4, 12], [4, 13], [4, 14], [4, 15], [5, 1], [5, 2], [5, 3], [5, 4], [5, 5], [5, 6], [5, 7], [5, 8], [5, 9], [5, 10], [5, 11], [5, 12], [5, 13], [5, 14], [5, 15], [6, 1], [6, 2], [6, 3], [6, 4], [6, 5], [6, 6], [6, 7], [6, 8], [6, 9], [6, 10], [6, 11], [6, 12], [6, 13], [6, 14], [6, 15], [7, 1], [7, 2], [7, 3], [7, 4], [7, 5], [7, 6], [7, 7], [7, 8], [7, 9], [7, 10], [7, 11], [7, 12], [7, 13], [7, 14], [7, 15], [8, 1], [8, 2], [8, 3], [8, 4], [8, 5], [8, 6], [8, 7], [8, 8], [8, 9], [8, 10], [8, 11], [8, 12], [8, 13], [8, 14], [8, 15], [9, 1], [9, 2], [9, 3], [9, 4], [9, 5], [9, 6], [9, 7], [9, 8], [9, 9], [9, 10], [9, 11], [9, 12], [9, 13], [9, 14], [9, 15], [10, 1], [10, 2], [10, 3], [10, 4], [10, 5], [10, 6], [10, 7], [10, 8], [10, 9], [10, 10], [10, 11], [10, 12], [10, 13], [10, 14], [10, 15], [11, 1], [11, 2], [11, 3], [11, 4], [11, 5], [11, 6], [11, 7], [11, 8], [11, 9], [11, 10], [11, 11], [11, 12], [11, 13], [11, 14], [11, 15], [12, 1], [12, 2], [12, 3], [12, 4], [12, 5], [12, 6], [12, 7], [12, 8], [12, 9], [12, 10], [12, 11], [12, 12], [12, 13], [12, 14], [12, 15], [13, 1], [13, 2], [13, 3], [13, 4], [13, 5], [13, 6], [13, 7], [13, 8], [13, 9], [13, 10], [13, 11], [13, 12], [13, 13], [13, 14], [13, 15], [14, 1], [14, 2], [14, 3], [14, 4], [14, 5], [14, 6], [14, 7], [14, 8], [14, 9], [14, 10], [14, 11], [14, 12], [14, 13], [14, 14], [14, 15], [15, 1], [15, 2], [15, 3], [15, 4], [15, 5], [15, 6], [15, 7], [15, 8], [15, 9], [15, 10], [15, 11], [15, 12], [15, 13], [15, 14], [15, 15]], 'padding': [[1, 1], [1, 2], [1, 3], [1, 4], [1, 5], [1, 6], [1, 7], [1, 8], [1, 9], [1, 10], [1, 11], [1, 12], [1, 13], [1, 14], [1, 15], [2, 1], [2, 2], [2, 3], [2, 4], [2, 5], [2, 6], [2, 7], [2, 8], [2, 9], [2, 10], [2, 11], [2, 12], [2, 13], [2, 14], [2, 15], [3, 1], [3, 2], [3, 3], [3, 4], [3, 5], [3, 6], [3, 7], [3, 8], [3, 9], [3, 10], [3, 11], [3, 12], [3, 13], [3, 14], [3, 15], [4, 1], [4, 2], [4, 3], [4, 4], [4, 5], [4, 6], [4, 7], [4, 8], [4, 9], [4, 10], [4, 11], [4, 12], [4, 13], [4, 14], [4, 15], [5, 1], [5, 2], [5, 3], [5, 4], [5, 5], [5, 6], [5, 7], [5, 8], [5, 9], [5, 10], [5, 11], [5, 12], [5, 13], [5, 14], [5, 15], [6, 1], [6, 2], [6, 3], [6, 4], [6, 5], [6, 6], [6, 7], [6, 8], [6, 9], [6, 10], [6, 11], [6, 12], [6, 13], [6, 14], [6, 15], [7, 1], [7, 2], [7, 3], [7, 4], [7, 5], [7, 6], [7, 7], [7, 8], [7, 9], [7, 10], [7, 11], [7, 12], [7, 13], [7, 14], [7, 15], [8, 1], [8, 2], [8, 3], [8, 4], [8, 5], [8, 6], [8, 7], [8, 8], [8, 9], [8, 10], [8, 11], [8, 12], [8, 13], [8, 14], [8, 15], [9, 1], [9, 2], [9, 3], [9, 4], [9, 5], [9, 6], [9, 7], [9, 8], [9, 9], [9, 10], [9, 11], [9, 12], [9, 13], [9, 14], [9, 15], [10, 1], [10, 2], [10, 3], [10, 4], [10, 5], [10, 6], [10, 7], [10, 8], [10, 9], [10, 10], [10, 11], [10, 12], [10, 13], [10, 14], [10, 15], [11, 1], [11, 2], [11, 3], [11, 4], [11, 5], [11, 6], [11, 7], [11, 8], [11, 9], [11, 10], [11, 11], [11, 12], [11, 13], [11, 14], [11, 15], [12, 1], [12, 2], [12, 3], [12, 4], [12, 5], [12, 6], [12, 7], [12, 8], [12, 9], [12, 10], [12, 11], [12, 12], [12, 13], [12, 14], [12, 15], [13, 1], [13, 2], [13, 3], [13, 4], [13, 5], [13, 6], [13, 7], [13, 8], [13, 9], [13, 10], [13, 11], [13, 12], [13, 13], [13, 14], [13, 15], [14, 1], [14, 2], [14, 3], [14, 4], [14, 5], [14, 6], [14, 7], [14, 8], [14, 9], [14, 10], [14, 11], [14, 12], [14, 13], [14, 14], [14, 15], [15, 1], [15, 2], [15, 3], [15, 4], [15, 5], [15, 6], [15, 7], [15, 8], [15, 9], [15, 10], [15, 11], [15, 12], [15, 13], [15, 14], [15, 15]], 'dilation': [[1, 1], [1, 2], [1, 4], [1, 8], [1, 16], [2, 1], [2, 2], [2, 4], [2, 8], [2, 16], [4, 1], [4, 2], [4, 4], [4, 8], [4, 16], [8, 1], [8, 2], [8, 4], [8, 8], [8, 16], [16, 1], [16, 2], [16, 4], [16, 8], [16, 16]]}, 'max_filter': 9792, 'dsp': [[96, 32]], 'operations': ['Convolution', 'MaxPool', 'AvgPool', 'EltwiseAdd', 'UpSample', 'Download', 'Upload'], 'upsample': [[1, 1], [1, 2], [1, 4], [1, 8], [2, 1], [2, 2], [2, 4], [2, 8], [4, 1], [4, 2], [4, 4], [4, 8], [8, 1], [8, 2], [8, 4], [8, 8]]}
+Inner Product Found 0
+Schedule Name: 
+{1} -|-0 name data type Input fpga False bottoms [] [Extras None]-  Past [] -> Future []
+{1} -|-1 name L0_bn type Convolution fpga True bottoms ['data'] [Extras None]-  Past [] -> Future []
+{1} -|-2 name relu1 type ReLU fpga True bottoms ['L0_bn'] [Extras None]-  Past [] -> Future []
+{1} -|-3 name L0_1_bn type Convolution fpga True bottoms ['relu1'] [Extras None]-  Past [] -> Future []
+{1} -|-4 name relu1_1 type ReLU fpga True bottoms ['L0_1_bn'] [Extras None]-  Past [] -> Future []
+{1} -|-5 name cp1_bn type Convolution fpga True bottoms ['relu1_1'] [Extras None]-  Past [] -> Future []
+{1} -|-6 name relu_cp1 type ReLU fpga True bottoms ['cp1_bn'] [Extras None]-  Past [] -> Future []
+{1} -|-7 name L1_bn type Convolution fpga True bottoms ['relu_cp1'] [Extras None]-  Past [] -> Future []
+{1} -|-8 name relu2 type ReLU fpga True bottoms ['L1_bn'] [Extras None]-  Past [] -> Future []
+{1} -|-9 name cp2_bn type Convolution fpga True bottoms ['relu2'] [Extras None]-  Past [] -> Future []
+{1} -|-10 name relu_cp2 type ReLU fpga True bottoms ['cp2_bn'] [Extras None]-  Past [] -> Future []
+{1} -|-11 name L2_bn type Convolution fpga True bottoms ['relu_cp2'] [Extras None]-  Past [] -> Future []
+{1} -|-12 name relu3 type ReLU fpga True bottoms ['L2_bn'] [Extras None]-  Past [] -> Future []
+{1} -|-13 name L3_bn type Convolution fpga True bottoms ['relu3'] [Extras None]-  Past [] -> Future []
+{1} -|-14 name relu4 type ReLU fpga True bottoms ['L3_bn'] [Extras None]-  Past [] -> Future []
+{1} -|-15 name L4_bn type Convolution fpga True bottoms ['relu4'] [Extras None]-  Past [] -> Future []
+{1} -|-16 name relu5 type ReLU fpga True bottoms ['L4_bn'] [Extras None]-  Past [] -> Future []
+{1} -|-17 name cp5_bn type Convolution fpga True bottoms ['relu5'] [Extras None]-  Past [] -> Future []
+{1} -|-18 name relu_cp5 type ReLU fpga True bottoms ['cp5_bn'] [Extras None]-  Past [] -> Future []
+{1} -|-19 name L5_bn type Convolution fpga True bottoms ['relu_cp5'] [Extras None]-  Past [] -> Future []
+{1} -|-20 name relu6 type ReLU fpga True bottoms ['L5_bn'] [Extras None]-  Past [] -> Future []
+{1} -|-21 name L6_bn type Convolution fpga True bottoms ['relu6'] [Extras None]-  Past [] -> Future []
+{1} -|-22 name relu7 type ReLU fpga True bottoms ['L6_bn'] [Extras None]-  Past [] -> Future []
+{1} -|-23 name bb-output type Convolution fpga True bottoms ['relu7'] [Extras None]-  Past [] -> Future []
+{1} -|-24 name pixel-conv type Convolution fpga True bottoms ['relu7'] [Extras None]-  Past [] -> Future []
+{1} -|-25 name pixel-conv-tiled type GSTiling fpga False bottoms ['pixel-conv'] [Extras None]-  Past [] -> Future []
+{1} -|-26 name bb-output-tiled type GSTiling fpga False bottoms ['bb-output'] [Extras None]-  Past [] -> Future []
+{1} -|-27 name pixel-loss type Softmax fpga False bottoms ['pixel-conv-tiled'] [Extras None]-  Past [] -> Future []
+####################################
+**************************************************
+* BASE Introduction DeepPhi (aka deeppy) factors
+**************************************************
+**************************************************
+* Deconv to (Upsample)? + Conv
+**************************************************
+Added Updamples 0 []
+**************************************************
+*  Maximus AuReLiUs: MAX(x*K,X) = RELU(x, K) 
+**************************************************
+Removed batch norm - scale 0 []
+Removal Dropout
+Removed Dropout ? 0 []
+Bathnorm-Scale telescoping
+Removed SC 0 []
+Pre-Bathnorm or Pre-Scale
+Removed Pre 0 []
+Pre-Bathnorm or Pre-Scale Inner-product
+Removed Pre 0 []
+Post-Bathnorm or Post-Scale
+Removed Post 0 []
+Removed ReLU? 11 ['relu1', 'relu1_1', 'relu_cp1', 'relu2', 'relu_cp2', 'relu3', 'relu4', 'relu5', 'relu_cp5', 'relu6', 'relu7']
+Removed PreReLU? 0 []
+**************************************************
+*  Ping Pong Failure preventions 
+**************************************************
+         Fatty convolutions:  0 []
+**************************************************
+* ReLU can move before concat if there are Convolutions, Eltwise, or Scale 
+**************************************************
+
+**************************************************
+* Concat Alignment verification to mod 8             
+**************************************************
+**************************************************
+* Pools can move before concat if there are convs 
+**************************************************
+**************************************************
+* Pipelining Convolution and Pooling
+**************************************************
+
+**************************************************
+* Concat Alignment verification              
+**************************************************
+
+**************************************************
+* Concat Alignment verification READ        
+**************************************************
+**************************************************
+* ReLU can move before concat if there are convs, eltwise, Scale 
+**************************************************
+**************************************************
+* CPU Layer will be REMOVED
+**************************************************
+Enforce Convexity of the FPGA Computation
+Schedule Name: 
+{1} -|-0 name data type Input fpga False bottoms [] [Extras None]-  Past [] -> Future []
+{1} -|-1 name L0_bn type Convolution fpga True bottoms ['data'] [Extras ['relu1']]-  Past [] -> Future ['relu1']
+{1} -|-2 name L0_1_bn type Convolution fpga True bottoms ['L0_bn'] [Extras ['relu1_1']]-  Past [] -> Future ['relu1_1']
+{1} -|-3 name cp1_bn type Convolution fpga True bottoms ['L0_1_bn'] [Extras ['relu_cp1']]-  Past [] -> Future ['relu_cp1']
+{1} -|-4 name L1_bn type Convolution fpga True bottoms ['cp1_bn'] [Extras ['relu2']]-  Past [] -> Future ['relu2']
+{1} -|-5 name cp2_bn type Convolution fpga True bottoms ['L1_bn'] [Extras ['relu_cp2']]-  Past [] -> Future ['relu_cp2']
+{1} -|-6 name L2_bn type Convolution fpga True bottoms ['cp2_bn'] [Extras ['relu3']]-  Past [] -> Future ['relu3']
+{1} -|-7 name L3_bn type Convolution fpga True bottoms ['L2_bn'] [Extras ['relu4']]-  Past [] -> Future ['relu4']
+{1} -|-8 name L4_bn type Convolution fpga True bottoms ['L3_bn'] [Extras ['relu5']]-  Past [] -> Future ['relu5']
+{1} -|-9 name cp5_bn type Convolution fpga True bottoms ['L4_bn'] [Extras ['relu_cp5']]-  Past [] -> Future ['relu_cp5']
+{1} -|-10 name L5_bn type Convolution fpga True bottoms ['cp5_bn'] [Extras ['relu6']]-  Past [] -> Future ['relu6']
+{1} -|-11 name L6_bn type Convolution fpga True bottoms ['L5_bn'] [Extras ['relu7']]-  Past [] -> Future ['relu7']
+{1} -|-12 name bb-output type Convolution fpga True bottoms ['L6_bn'] [Extras None]-  Past [] -> Future []
+{1} -|-13 name pixel-conv type Convolution fpga True bottoms ['L6_bn'] [Extras None]-  Past [] -> Future []
+{1} -|-14 name pixel-conv-tiled type GSTiling fpga False bottoms ['pixel-conv'] [Extras None]-  Past [] -> Future []
+{1} -|-15 name bb-output-tiled type GSTiling fpga False bottoms ['bb-output'] [Extras None]-  Past [] -> Future []
+{1} -|-16 name pixel-loss type Softmax fpga False bottoms ['pixel-conv-tiled'] [Extras None]-  Past [] -> Future []
+####################################
+
+ convex_fpga 
+
+CPUS 3
+NO FPGA pixel-conv-tiled Layers 19 Time 19
+NO FPGA bb-output-tiled Layers 18 Time 19
+NO FPGA pixel-loss Layers 17 Time 19
+Schedule Name: 
+{1} -|-0 name data type Input fpga True bottoms [] [Extras None]-  Past [] -> Future []
+{1} -|-1 name L0_bn type Convolution fpga True bottoms ['data'] [Extras ['relu1']]-  Past [] -> Future ['relu1']
+{1} -|-2 name L0_1_bn type Convolution fpga True bottoms ['L0_bn'] [Extras ['relu1_1']]-  Past [] -> Future ['relu1_1']
+{1} -|-3 name cp1_bn type Convolution fpga True bottoms ['L0_1_bn'] [Extras ['relu_cp1']]-  Past [] -> Future ['relu_cp1']
+{1} -|-4 name L1_bn type Convolution fpga True bottoms ['cp1_bn'] [Extras ['relu2']]-  Past [] -> Future ['relu2']
+{1} -|-5 name cp2_bn type Convolution fpga True bottoms ['L1_bn'] [Extras ['relu_cp2']]-  Past [] -> Future ['relu_cp2']
+{1} -|-6 name L2_bn type Convolution fpga True bottoms ['cp2_bn'] [Extras ['relu3']]-  Past [] -> Future ['relu3']
+{1} -|-7 name L3_bn type Convolution fpga True bottoms ['L2_bn'] [Extras ['relu4']]-  Past [] -> Future ['relu4']
+{1} -|-8 name L4_bn type Convolution fpga True bottoms ['L3_bn'] [Extras ['relu5']]-  Past [] -> Future ['relu5']
+{1} -|-9 name cp5_bn type Convolution fpga True bottoms ['L4_bn'] [Extras ['relu_cp5']]-  Past [] -> Future ['relu_cp5']
+{1} -|-10 name L5_bn type Convolution fpga True bottoms ['cp5_bn'] [Extras ['relu6']]-  Past [] -> Future ['relu6']
+{1} -|-11 name L6_bn type Convolution fpga True bottoms ['L5_bn'] [Extras ['relu7']]-  Past [] -> Future ['relu7']
+{1} -|-12 name bb-output type Convolution fpga True bottoms ['L6_bn'] [Extras None]-  Past [] -> Future []
+{1} -|-12 name bb-output_output type Output fpga True bottoms ['bb-output'] [Extras None]-  Past [] -> Future []
+{1} -|-13 name pixel-conv type Convolution fpga True bottoms ['L6_bn'] [Extras None]-  Past [] -> Future []
+{1} -|-13 name pixel-conv_output type Output fpga True bottoms ['pixel-conv'] [Extras None]-  Past [] -> Future []
+{0} 
+{0} 
+####################################
+**************************************************
+* * AVG + Scale -> AVG with different scaling  
+**************************************************
+**************************************************
+* * Enrich the graph with quantization information  
+**************************************************
+Optimizing 1 schedules
+**************************************************
+* COMPUTING MEMORY REQUIREMENTS
+**************************************************
+IO @@@ bb-output_output_blob MemoryAllocation(start=0, end=69120, size=69120, extra=[], strategy=[], layout=-1, timestamp=-1, slice=1, shapes=SizeType(batches=1, channels=256, height=12, width=20), replication=Replication(full_sect_num=0, repl_sect_num=0, repl_unit_num=0, repl_unit_width=0, channels_division=0), written=False, specifier='', IO=True)
+IO @@@ pixel-conv_output_blob MemoryAllocation(start=0, end=46080, size=46080, extra=[], strategy=[], layout=-1, timestamp=-1, slice=1, shapes=SizeType(batches=1, channels=128, height=12, width=20), replication=Replication(full_sect_num=0, repl_sect_num=0, repl_unit_num=0, repl_unit_width=0, channels_division=0), written=False, specifier='', IO=True)
+IO @@@ data_blob MemoryAllocation(start=0, end=22118400, size=22118400, extra=[], strategy=[], layout=-1, timestamp=-1, slice=1, shapes=SizeType(batches=1, channels=3, height=360, width=640), replication=Replication(full_sect_num=0, repl_sect_num=0, repl_unit_num=0, repl_unit_width=0, channels_division=0), written=False, specifier='', IO=True)
+Minimum Memory __________
+1 ['L0_bn'] size:27648000 remap:[] data movement:[]
+1       data_blob M[0,22118400] Z=22118400 F=[1] B=[0] E=[] S=['layer'] [] L=-1 T=SizeType(batches=1, channels=3, height=360, width=640)
+1       L0_bn_blob M[0,5529600] Z=5529600 F=[2] B=[1] E=[] S=['layer'] [] L=-1 T=SizeType(batches=1, channels=8, height=180, width=320)
+MAX  1
+TOP 5
+__________
+1 ['L0_bn'] size:27648000 remap:[] data movement:[]
+1       data_blob M[0,22118400] Z=22118400 F=[1] B=[0] E=[] S=['layer'] [] L=-1 T=SizeType(batches=1, channels=3, height=360, width=640)
+1       L0_bn_blob M[0,5529600] Z=5529600 F=[2] B=[1] E=[] S=['layer'] [] L=-1 T=SizeType(batches=1, channels=8, height=180, width=320)
+__________
+0 ['data'] size:22118400 remap:[] data movement:[]
+0       data_blob M[0,22118400] Z=22118400 F=[1] B=[0] E=[] S=['layer'] [] L=-1 T=SizeType(batches=1, channels=3, height=360, width=640)
+__________
+2 ['L0_1_bn'] size:6912000 remap:[] data movement:[]
+2       L0_bn_blob M[0,5529600] Z=5529600 F=[2] B=[1] E=[] S=['layer'] [] L=-1 T=SizeType(batches=1, channels=8, height=180, width=320)
+2       L0_1_bn_blob M[0,1382400] Z=1382400 F=[3] B=[2] E=[] S=['layer'] [] L=-1 T=SizeType(batches=1, channels=32, height=90, width=160)
+__________
+3 ['cp1_bn'] size:1728000 remap:[] data movement:[]
+3       L0_1_bn_blob M[0,1382400] Z=1382400 F=[3] B=[2] E=[] S=['layer'] [] L=-1 T=SizeType(batches=1, channels=32, height=90, width=160)
+3       cp1_bn_blob M[0,345600] Z=345600 F=[4] B=[3] E=[] S=['layer'] [] L=-1 T=SizeType(batches=1, channels=32, height=45, width=80)
+__________
+4 ['L1_bn'] size:691200 remap:[] data movement:[]
+4       cp1_bn_blob M[0,345600] Z=345600 F=[4] B=[3] E=[] S=['layer'] [] L=-1 T=SizeType(batches=1, channels=32, height=45, width=80)
+4       L1_bn_blob M[0,345600] Z=345600 F=[5] B=[4] E=[] S=['layer'] [] L=-1 T=SizeType(batches=1, channels=64, height=45, width=80)
+Using Hardware Version [3, 3]
+**************************************************
+* REPLICATION 
+**************************************************
+Simple Replication
+optimized replication: 32 L0_bn
+optimized replication: 32 L0_1_bn
+optimized replication: 32 cp1_bn
+optimized replication: 32 L1_bn
+optimized replication: 32 cp2_bn
+optimized replication: 32 L2_bn
+optimized replication: 32 L3_bn
+optimized replication: 32 L4_bn
+optimized replication: 32 cp5_bn
+optimized replication: 32 L5_bn
+replicaiton done
+replicaiton done 2
+**************************************************
+* ALLOCATING DYNAMIC MEMORY SCHEDULE
+**************************************************
+Allocating Memory all
+Trying no-DDR strategies...
+You tell me there must be DDR, Skip the AM only
+Trying DDR strategies with 0 MB ...
+Reset Memory
+Trying strategy bottom (DDR: 0 MB)
+Performing two level schedule strategy all
+Reference {'Convolution': ['ddr_to_am', 'ddr_to_ddr', 'am_to_am']}
+No Memory: it is based on the maximum available
+__________
+1 ['L0_bn'] size:27648000 remap:[] data movement:[]
+1       data_blob M[0,22118400] Z=22118400 F=[1] B=[0] E=[] S=['layer'] [] L=-1 T=SizeType(batches=1, channels=3, height=360, width=640)
+1       L0_bn_blob M[0,5529600] Z=5529600 F=[2] B=[1] E=[] S=['layer'] [] L=-1 T=SizeType(batches=1, channels=8, height=180, width=320)
+Initial memory map sizes [0, 9437184, 9437184]
+Reset Memory
+Trying strategy bottles (DDR: 0 MB)
+Performing two level schedule strategy all
+Reference {'Convolution': ['ddr_to_am', 'ddr_to_ddr', 'am_to_am']}
+No Memory: it is based on the maximum available
+__________
+1 ['L0_bn'] size:27648000 remap:[] data movement:[]
+1       data_blob M[0,22118400] Z=22118400 F=[1] B=[0] E=[] S=['layer'] [] L=-1 T=SizeType(batches=1, channels=3, height=360, width=640)
+1       L0_bn_blob M[0,5529600] Z=5529600 F=[2] B=[1] E=[] S=['layer'] [] L=-1 T=SizeType(batches=1, channels=8, height=180, width=320)
+Initial memory map sizes [0, 9437184, 9437184]
+Reset Memory
+Trying strategy xXx (DDR: 0 MB)
+Performing two level schedule strategy all
+Reference {'Convolution': ['ddr_to_am', 'ddr_to_ddr', 'am_to_am']}
+No Memory: it is based on the maximum available
+__________
+1 ['L0_bn'] size:27648000 remap:[] data movement:[]
+1       data_blob M[0,22118400] Z=22118400 F=[1] B=[0] E=[] S=['layer'] [] L=-1 T=SizeType(batches=1, channels=3, height=360, width=640)
+1       L0_bn_blob M[0,5529600] Z=5529600 F=[2] B=[1] E=[] S=['layer'] [] L=-1 T=SizeType(batches=1, channels=8, height=180, width=320)
+Initial memory map sizes [0, 9437184, 9437184]
+Reset Memory
+Trying strategy flip (DDR: 0 MB)
+Performing two level schedule strategy all
+Reference {'Convolution': ['ddr_to_am', 'ddr_to_ddr', 'am_to_am']}
+No Memory: it is based on the maximum available
+__________
+1 ['L0_bn'] size:27648000 remap:[] data movement:[]
+1       data_blob M[0,22118400] Z=22118400 F=[1] B=[0] E=[] S=['layer'] [] L=-1 T=SizeType(batches=1, channels=3, height=360, width=640)
+1       L0_bn_blob M[0,5529600] Z=5529600 F=[2] B=[1] E=[] S=['layer'] [] L=-1 T=SizeType(batches=1, channels=8, height=180, width=320)
+Initial memory map sizes [0, 9437184, 9437184]
+Reset Memory
+Trying strategy top (DDR: 0 MB)
+Performing two level schedule strategy all
+Reference {'Convolution': ['ddr_to_am', 'ddr_to_ddr', 'am_to_am']}
+No Memory: it is based on the maximum available
+__________
+1 ['L0_bn'] size:27648000 remap:[] data movement:[]
+1       data_blob M[0,22118400] Z=22118400 F=[1] B=[0] E=[] S=['layer'] [] L=-1 T=SizeType(batches=1, channels=3, height=360, width=640)
+1       L0_bn_blob M[0,5529600] Z=5529600 F=[2] B=[1] E=[] S=['layer'] [] L=-1 T=SizeType(batches=1, channels=8, height=180, width=320)
+Initial memory map sizes [0, 9437184, 9437184]
+Reset Memory
+Trying strategy tops (DDR: 0 MB)
+Performing two level schedule strategy all
+Reference {'Convolution': ['ddr_to_am', 'ddr_to_ddr', 'am_to_am']}
+No Memory: it is based on the maximum available
+__________
+1 ['L0_bn'] size:27648000 remap:[] data movement:[]
+1       data_blob M[0,22118400] Z=22118400 F=[1] B=[0] E=[] S=['layer'] [] L=-1 T=SizeType(batches=1, channels=3, height=360, width=640)
+1       L0_bn_blob M[0,5529600] Z=5529600 F=[2] B=[1] E=[] S=['layer'] [] L=-1 T=SizeType(batches=1, channels=8, height=180, width=320)
+Initial memory map sizes [0, 9437184, 9437184]
+Reset Memory
+Trying strategy shuffle (DDR: 0 MB)
+Performing two level schedule strategy all
+Reference {'Convolution': ['ddr_to_am', 'ddr_to_ddr', 'am_to_am']}
+No Memory: it is based on the maximum available
+__________
+1 ['L0_bn'] size:27648000 remap:[] data movement:[]
+1       data_blob M[0,22118400] Z=22118400 F=[1] B=[0] E=[] S=['layer'] [] L=-1 T=SizeType(batches=1, channels=3, height=360, width=640)
+1       L0_bn_blob M[0,5529600] Z=5529600 F=[2] B=[1] E=[] S=['layer'] [] L=-1 T=SizeType(batches=1, channels=8, height=180, width=320)
+Initial memory map sizes [0, 9437184, 9437184]
+Reset Memory
+Trying strategy bottle (DDR: 0 MB)
+Performing two level schedule strategy all
+Reference {'Convolution': ['ddr_to_am', 'ddr_to_ddr', 'am_to_am']}
+No Memory: it is based on the maximum available
+__________
+1 ['L0_bn'] size:27648000 remap:[] data movement:[]
+1       data_blob M[0,22118400] Z=22118400 F=[1] B=[0] E=[] S=['layer'] [] L=-1 T=SizeType(batches=1, channels=3, height=360, width=640)
+1       L0_bn_blob M[0,5529600] Z=5529600 F=[2] B=[1] E=[] S=['layer'] [] L=-1 T=SizeType(batches=1, channels=8, height=180, width=320)
+Initial memory map sizes [0, 9437184, 9437184]
+Reset Memory
+Trying strategy bysize (DDR: 0 MB)
+Performing two level schedule strategy all
+Reference {'Convolution': ['ddr_to_am', 'ddr_to_ddr', 'am_to_am']}
+No Memory: it is based on the maximum available
+__________
+1 ['L0_bn'] size:27648000 remap:[] data movement:[]
+1       data_blob M[0,22118400] Z=22118400 F=[1] B=[0] E=[] S=['layer'] [] L=-1 T=SizeType(batches=1, channels=3, height=360, width=640)
+1       L0_bn_blob M[0,5529600] Z=5529600 F=[2] B=[1] E=[] S=['layer'] [] L=-1 T=SizeType(batches=1, channels=8, height=180, width=320)
+Initial memory map sizes [0, 9437184, 9437184]
+Trying DDR strategies with 1024 MB ...
+Reset Memory
+Trying strategy bottom (DDR: 1024 MB)
+Performing two level schedule strategy all
+Reference {'Convolution': ['ddr_to_am', 'ddr_to_ddr', 'am_to_am']}
+outs 2
+inss 1
+ ?????  <dpuv1.codegeneration.hardware.DDR object at 0x7f1c3769cf28> <dpuv1.codegeneration.hardware.DDR object at 0x7f1c375acd68>
+Done I instruction:inputs  [] outputs [0] call data
+None
+BlobInformation(size=22118400, name='data_blob', memory=MemoryAllocation(start=0, end=7372800, size=7372800, extra=[1], strategy=[], layout=1, timestamp=1, slice=1, shapes=SizeType(batches=1, channels=3, height=360, width=640), replication=Replication(full_sect_num=0, repl_sect_num=1, repl_unit_num=3, repl_unit_width=32, channels_division=[3]), written=False, specifier='Input', IO=True), dag=ColorForDAG(active=[3], schedule=-1, forward=[1], backward=[0], extra=None, hook=[]), layer_type=['layer'], data_movement_operations=[], data_movement_operation_costs=[])
+Successful Strategy bottom (DDR: 1024 MB)
+Done schedule 16 STEPS
+**************************************************
+* ADDED weight information weights_bit 
+**************************************************
+**************************************************
+* GENERATING OUTPUT REPORTS
+**************************************************
+schedule_and_parallelism
+Minimum Memory 2 ['L0_1_bn'] 9437184
+L0_bn_blob M[3907584,9437184] Z=5529600 F=[2] B=[1] E=[1] S=['layer'] ['tops'] L=0 T=SizeType(batches=1, channels=8, height=180, width=320)
+L0_1_bn_blob M[0,1382400] Z=1382400 F=[3] B=[2] E=[1] S=['layer'] [] L=0 T=SizeType(batches=1, channels=32, height=90, width=160)
+**************************************************
+* GENERATING OUTPUT FILES
+**************************************************
+XDNN Command file: ./work/face_detect
+XDNN JSON Report file: ./work/face_detect.json
+./work
+Path to generatefile exists...
+***** Inst JSON
+[1] <class 'dpuv1.utils.xdnn_util.dict2attr'>
+REP V   BestReplication(FSN=0, RSN=1, RUN=12, RUW=8, FSC=0, RSC=3) SpaceAndTime(space=22118400, time=89, replication=Replication(full_sect_num=0, repl_sect_num=1, repl_unit_num=12, repl_unit_width=8, channels_division=[3]))
+V3 Tile L0_bn (23.48936170212766, -360960)
+output ddr {(368640, 268435456): MemoryAllocation(start=368640, end=268435456, size=268066816, extra=[], strategy=[], layout=-1, timestamp=-1, slice=-1, shapes=None, replication=Replication(full_sect_num=0, repl_sect_num=0, repl_unit_num=0, repl_unit_width=0, channels_division=0), written=False, specifier='', IO=False)}
+input ddr {(7372800, 268435456): MemoryAllocation(start=7372800, end=268435456, size=261062656, extra=[], strategy=[], layout=-1, timestamp=-1, slice=-1, shapes=None, replication=Replication(full_sect_num=0, repl_sect_num=0, repl_unit_num=0, repl_unit_width=0, channels_division=0), written=False, specifier='', IO=False)}
+OUTPUT REPORT:
+Unsupported Layers: 0
+***** Inst JSON Done
+* XDNN QUANT JSON  ./work/face_detect_quant.json
+***** Inst FILE
+REP V   BestReplication(FSN=0, RSN=1, RUN=12, RUW=8, FSC=0, RSC=3) SpaceAndTime(space=22118400, time=14332, replication=Replication(full_sect_num=0, repl_sect_num=1, repl_unit_num=12, repl_unit_width=8, channels_division=[3]))
+V3 Tile L0_bn (23.48936170212766, -360960)
+***** Inst FILE OUT
+***** Inst COLLECT
+***** COLLECT CODES 31
+# template XNConv id XNOp name kernel_w kernel_h strides_w strides_h padding_w padding_h dilation_w dilation_h preshift scale postshift relu prelu bias inaddr insize_w insize_h inchan outaddr outsize_w outsize_h  outchan weights_bit slice src_full_sect_num src_repl_sect_num src_repl_unit_num src_repl_unit_width dst_full_sect_num dst_repl_sect_num dst_repl_unit_num dst_repl_unit_width concat_i_am_your_father concat_full_sect_num concat_repl_sect_num concat_repl_unit_num concat_repl_unit_width concat_starting_ch concat_channels wait_download wait_upload wait_conv wait_pool wait_ew wait_upsmpl parallel_read prerelu en_pingpong_weight en_halfrate_mode en_inlinemaxpool srcAddrReadFromImgQ destAddrReadFromImgQ srcAddDDR dstAddDDR tile_width tile_height HAT SRCAM-Buffer_0 SRCAM-Buffer_1 DEST_AM-Buffer_Offset 
+# template XNDeconv id XNOp name kernel_w kernel_h strides_w strides_h padding_w padding_h dilation_w dilation_h preshift scale postshift relu prelu bias inaddr insize_w insize_h inchan outaddr outsize_w outsize_h  outchan weights_bit slice src_full_sect_num src_repl_sect_num src_repl_unit_num src_repl_unit_width dst_full_sect_num dst_repl_sect_num dst_repl_unit_num dst_repl_unit_width concat_i_am_your_father concat_full_sect_num concat_repl_sect_num concat_repl_unit_num concat_repl_unit_width concat_starting_ch concat_channels wait_download wait_upload wait_conv wait_pool wait_ew wait_upsmpl parallel_read prerelu en_pingpong_weight en_halfrate_mode en_inlinemaxpool srcAddrReadFromImgQ destAddrReadFromImgQ srcAddDDR dstAddDDR tile_width tile_height HAT SRCAM-Buffer_0 SRCAM-Buffer_1 DEST_AM-Buffer_Offset 
+# template XNConvP id XNOp name kernel_w kernel_h strides_w strides_h padding_w padding_h dilation_w dilation_h preshift scale postshift relu bias inaddr insize_w insize_h inchan outaddr outsize_w outsize_h  outchan Bypass_Perf_Opt  pool_kernel_w pool_kernel_h pool_strides_w pool_strides_h pool_paddings_w pool_paddings_h pool_fcmode
+# template XNUpload id XNOp inaddr insize inchan
+# template XNConcat pound id XNOp name start end size dst_full_sect_num dst_repl_sect_num dst_repl_unit_num dst_repl_unit_width MUTE
+# template XNInner id XNOp name relu prelu preshift scale postshift matrixheight matrixwidthh inaddr inheight inwidth outaddr outheight outwidth
+# template XNGather id XNOp uram_dest ddr_src insize_w insize_h inchan a0 b1 c1 start_row end_row slice full_sect_num repl_sect_num repl_unit_num repl_unit_width srcAddrReadFromImgQ sep comment
+# template XNScatter id XNOp uram_src ddr_dest outsize_w outsize_h outchan a0 b1 c1 start_row end_row slice full_sect_num repl_sect_num repl_unit_num repl_unit_width destAddrReadFromImgQ
+# template XNEltwise id XNOp name add bn relu prelu inaddrA inaddrB insize_w insize_h inchan outaddr weights_bit slice src_full_sect_num src_repl_sect_num src_repl_unit_num src_repl_unit_width dst_full_sect_num dst_repl_sect_num dst_repl_unit_num dst_repl_unit_width concat_i_am_your_father concat_full_sect_num concat_repl_sect_num concat_repl_unit_num concat_repl_unit_width concat_starting_ch concat_channels wait_download wait_upload wait_conv wait_pool wait_ew wait_upsmpl parallel_read prerelu en_pingpong_weight en_halfrate_mode en_inlinemaxpool srcAddrReadFromImgQ destAddrReadFromImgQ srcAddDDR dstAddDDR tile_width tile_height HAT SRCAM-Buffer_0 SRCAM-Buffer_1 DEST_AM-Buffer_Offset EWA_2nd-Src_AM 
+# template XNAvgPool id XNOp name kernel_w kernel_h  strides_w strides_h paddings_w paddings_h inaddr insize_w insize_h inchan outaddr outsize_w outsize_h weights_bit slice src_full_sect_num src_repl_sect_num src_repl_unit_num src_repl_unit_width dst_full_sect_num dst_repl_sect_num dst_repl_unit_num dst_repl_unit_width concat_i_am_your_father concat_full_sect_num concat_repl_sect_num concat_repl_unit_num concat_repl_unit_width concat_starting_ch concat_channels wait_download wait_upload wait_conv wait_pool wait_ew wait_upsmpl parallel_read prerelu en_pingpong_weight en_halfrate_mode en_inlinemaxpool srcAddrReadFromImgQ destAddrReadFromImgQ srcAddDDR dstAddDDR tile_width tile_height HAT SRCAM-Buffer_0 SRCAM-Buffer_1 DEST_AM-Buffer_Offset 
+# template XNMaxPool id XNOp name kernel_w kernel_h  strides_w strides_h paddings_w paddings_h inaddr insize_w insize_h inchan outaddr outsize_w outsize_h weights_bit slice src_full_sect_num src_repl_sect_num src_repl_unit_num src_repl_unit_width dst_full_sect_num dst_repl_sect_num dst_repl_unit_num dst_repl_unit_width concat_i_am_your_father concat_full_sect_num concat_repl_sect_num concat_repl_unit_num concat_repl_unit_width concat_starting_ch concat_channels wait_download wait_upload wait_conv wait_pool wait_ew wait_upsmpl parallel_read prerelu en_pingpong_weight en_halfrate_mode en_inlinemaxpool srcAddrReadFromImgQ destAddrReadFromImgQ srcAddDDR dstAddDDR tile_width tile_height HAT SRCAM-Buffer_0 SRCAM-Buffer_1 DEST_AM-Buffer_Offset 
+# template XNUpsample id XNOp name kernel_h kernel_w   inaddr insize_h  insize_w  inchan outaddr outsize_w outsize_h method weights_bit slice src_full_sect_num src_repl_sect_num src_repl_unit_num src_repl_unit_width dst_full_sect_num dst_repl_sect_num dst_repl_unit_num dst_repl_unit_width concat_i_am_your_father concat_full_sect_num concat_repl_sect_num concat_repl_unit_num concat_repl_unit_width concat_starting_ch concat_channels wait_download wait_upload wait_conv wait_pool wait_ew wait_upsmpl parallel_read prerelu en_pingpong_weight en_halfrate_mode en_inlinemaxpool srcAddrReadFromImgQ destAddrReadFromImgQ srcAddDDR dstAddDDR tile_width tile_height HAT SRCAM-Buffer_0 SRCAM-Buffer_1 DEST_AM-Buffer_Offset 
+# template XNAvgPoolPipelined id XNOp name kernel_w kernel_h  strides_w strides_h paddings_w paddings_h inaddr insize_w insize_h inchan outaddr outsize_w outsize_h weights_bit slice src_full_sect_num src_repl_sect_num src_repl_unit_num src_repl_unit_width dst_full_sect_num dst_repl_sect_num dst_repl_unit_num dst_repl_unit_width concat_i_am_your_father concat_full_sect_num concat_repl_sect_num concat_repl_unit_num concat_repl_unit_width concat_starting_ch concat_channels wait_download wait_upload wait_conv wait_pool wait_ew wait_upsmpl parallel_read prerelu en_pingpong_weight en_halfrate_mode en_inlinemaxpool srcAddrReadFromImgQ destAddrReadFromImgQ srcAddDDR dstAddDDR tile_width tile_height HAT SRCAM-Buffer_0 SRCAM-Buffer_1 DEST_AM-Buffer_Offset conv_name conv_kernel_w conv_kernel_h conv_strides_w conv_strides_h conv_padding_w conv_padding_h conv_dilation_w conv_dilation_h conv_relu conv_prelu conv_bias pool_insize_w pool_insize_h pool_inchan conv_outsize_w
+# template XNMaxPoolPipelined id XNOp name kernel_w kernel_h  strides_w strides_h paddings_w paddings_h inaddr insize_w insize_h inchan outaddr outsize_w outsize_h weights_bit slice src_full_sect_num src_repl_sect_num src_repl_unit_num src_repl_unit_width dst_full_sect_num dst_repl_sect_num dst_repl_unit_num dst_repl_unit_width concat_i_am_your_father concat_full_sect_num concat_repl_sect_num concat_repl_unit_num concat_repl_unit_width concat_starting_ch concat_channels wait_download wait_upload wait_conv wait_pool wait_ew wait_upsmpl parallel_read prerelu en_pingpong_weight en_halfrate_mode en_inlinemaxpool srcAddrReadFromImgQ destAddrReadFromImgQ srcAddDDR dstAddDDR tile_width tile_height HAT SRCAM-Buffer_0 SRCAM-Buffer_1 DEST_AM-Buffer_Offset conv_name conv_kernel_w conv_kernel_h conv_strides_w conv_strides_h conv_padding_w conv_padding_h conv_dilation_w conv_dilation_h conv_relu conv_prelu conv_bias pool_insize_w pool_insize_h pool_inchan conv_outsize_w
+# 1 XNGather 0x0 0x0 640 360 3 0 1 1 0 359 1 0 1 3 32 1 # Input data data: type=Input, sizes=None, shapes=None, sched 0 Kernel None Strides None Padding None MUTE CODE
+# spLiT L0_bn 9437184 ;
+2 XNConv L0 5 5 2 2 2 2 1 1 0 32768 25 1 0 1 0x0 640 360 3 0x9f00 320 180 8 1 1 0 1 12 8 0 1 3 32 0 0 0 0 0 0 0 1 1 1 1 1 1 0 0 1 0 0 1 0 1 0 80 47 1 0 16384 40704 # V3 SPLIT Code :)ddr_to_am
+5 XNConv L0_1 5 5 2 2 2 2 1 1 0 32768 22 1 0 1 0x9f00 320 180 8 0x0 160 90 32 1 1 0 1 3 32 0 1 3 32 0 0 0 0 0 0 0 1 1 1 1 1 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 # am_to_am
+7 XNConv cp1 3 3 2 2 1 1 1 1 0 32768 23 1 0 1 0x0 160 90 32 0x3840 80 45 32 1 1 0 1 3 32 0 1 3 32 0 0 0 0 0 0 0 1 1 1 1 1 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 # am_to_am
+9 XNConv L1 5 5 1 1 2 2 1 1 0 32768 21 1 0 1 0x3840 80 45 32 0x0 80 45 64 1 1 0 1 3 32 0 2 3 32 0 0 0 0 0 0 0 1 1 1 1 1 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 # am_to_am
+11 XNConv cp2 3 3 2 2 1 1 1 1 0 32768 24 1 0 1 0x0 80 45 64 0x1c20 40 23 64 1 1 0 2 3 32 0 2 3 32 0 0 0 0 0 0 0 1 1 1 1 1 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 # am_to_am
+13 XNConv L2 3 3 1 1 1 1 1 1 0 32768 23 1 0 1 0x1c20 40 23 64 0x0 40 23 64 1 1 0 2 3 32 0 2 3 32 0 0 0 0 0 0 0 1 1 1 1 1 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 # am_to_am
+15 XNConv L3 3 3 1 1 1 1 1 1 0 32768 23 1 0 1 0x0 40 23 64 0x730 40 23 64 1 1 0 2 3 32 0 2 3 32 0 0 0 0 0 0 0 1 1 1 1 1 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 # am_to_am
+17 XNConv L4 3 3 1 1 1 1 1 1 0 32768 23 1 0 1 0x730 40 23 64 0x0 40 23 64 1 1 0 2 3 32 0 2 3 32 0 0 0 0 0 0 0 1 1 1 1 1 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 # am_to_am
+19 XNConv cp5 3 3 2 2 1 1 1 1 0 32768 23 1 0 1 0x0 40 23 64 0x730 20 12 64 1 1 0 2 3 32 0 2 3 32 0 0 0 0 0 0 0 1 1 1 1 1 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 # am_to_am
+21 XNConv L5 5 5 1 1 2 2 1 1 0 32768 21 1 0 1 0x730 20 12 64 0x0 20 12 128 1 1 0 2 3 32 2 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 # am_to_am
+23 XNConv L6 1 1 1 1 0 0 1 1 0 32768 23 1 0 1 0x0 20 12 128 0x1e0 20 12 128 1 1 2 0 0 0 2 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 # am_to_am
+25 XNConv bb-output 1 1 1 1 0 0 1 1 0 32768 24 0 0 1 0x1e0 20 12 128 0x3c0 20 12 256 1 1 2 0 0 0 3 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 # am_to_am
+27 XNScatter 0x3c0 0x0 20 12 256 0 1 1 0 11 1 3 0 0 0 1 # Output bb-output_output
+29 XNConv pixel-conv 1 1 1 1 0 0 1 1 0 32768 22 0 0 1 0x1e0 20 12 128 0x0 20 12 128 1 1 2 0 0 0 2 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 # am_to_am
+31 XNScatter 0x0 0x3c000 20 12 128 0 1 1 0 11 1 2 0 0 0 1 # Output pixel-conv_output
+**************************************************
+* CLEANING PREVIOUS WEIGHTS
+**************************************************
+**************************************************
+* WRITING WEIGHTS
+**************************************************
+Weight HDF5: ./work/deploy.caffemodel_data.h5
+Processing weights for 16 schedule steps: 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16
+Done writing weights.
+**************************************************
+* EUREKA Schedule  PASSED
+**************************************************
+SUCCESS True
+Inputs ['data']
+Outputs ['bb-output-tiled', 'pixel-loss']
+-------------------
+Speaking to Butler 
+Response from Butler is: 
+errCode: errCode: 2
+errCode String: NO_XCLBIN_FOUND
+myHandle: 0
+valid: 1
+
+-------------------
+Speaking to Butler 
+Response from Butler is: 
+errCode: errCode: 2
+errCode String: NO_XCLBIN_FOUND
+myHandle: 0
+valid: 1
+
+-------------------
+Speaking to Butler 
+Response from Butler is: 
+errCode: errCode: 2
+errCode String: NO_XCLBIN_FOUND
+myHandle: 0
+valid: 1
+
+-------------------
+Speaking to Butler 
+Response from Butler is: 
+errCode: errCode: 2
+errCode String: NO_XCLBIN_FOUND
+myHandle: 0
+valid: 1
+
+-------------------
+Speaking to Butler 
+Response from Butler is: 
+errCode: errCode: 2
+errCode String: NO_XCLBIN_FOUND
+myHandle: 0
+valid: 1
+
+-------------------
+Speaking to Butler 
+Response from Butler is: 
+errCode: errCode: 2
+errCode String: NO_XCLBIN_FOUND
+myHandle: 0
+valid: 1
+
+-------------------
+Speaking to Butler 
+Response from Butler is: 
+errCode: errCode: 2
+errCode String: NO_XCLBIN_FOUND
+myHandle: 0
+valid: 1
+
+-------------------
+Speaking to Butler 
+Response from Butler is: 
+errCode: errCode: 2
+errCode String: NO_XCLBIN_FOUND
+myHandle: 0
+valid: 1
+
+-------------------
+Speaking to Butler 
+Response from Butler is: 
+errCode: errCode: 2
+errCode String: NO_XCLBIN_FOUND
+myHandle: 0
+valid: 1
+
+-------------------
+Speaking to Butler 
+Response from Butler is: 
+errCode: errCode: 2
+errCode String: NO_XCLBIN_FOUND
+myHandle: 0
+valid: 1
+
+-------------------
+Speaking to Butler 
+Response from Butler is: 
+errCode: errCode: 2
+errCode String: NO_XCLBIN_FOUND
+myHandle: 0
+valid: 1
+
+(vitis-ai-caffe) Vitis-AI /vitis_ai_home/examples/DPUCADX8G/face_detect >     
+  
+  
+  
+      
 
 ```
 
