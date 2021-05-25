@@ -61,6 +61,8 @@ Two options are available for installing the containers with the Vitis AI tools 
     ```bash
     git clone --recurse-submodules https://github.com/yu3peng/Vitis-AI  
 
+    chown -R 1000:1000 Vitis-AI
+
     cd Vitis-AI
     ```
 
